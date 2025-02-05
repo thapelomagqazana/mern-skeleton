@@ -1,7 +1,7 @@
 /**
  * @fileoverview Authentication Controller
  * @module controllers/authController
- * @description Handles user registration and authentication with JWT.
+ * @description Handles user authentication, including sign-in, sign-up, and sign-out.
  */
 
 import User from "../models/User.js";
@@ -27,7 +27,6 @@ export const registerUser = async (req, res) => {
     // Create new user
     const user = await User.create({ name, email, password });
 
-    // Return success response
     res.status(201).json({ message: "User registered successfully", userId: user._id });
   } catch (error) {
     console.error("❌ Registration Error:", error.message);
@@ -37,10 +36,10 @@ export const registerUser = async (req, res) => {
 
 /**
  * @function loginUser
- * @description Authenticates user login by verifying email and password.
+ * @description Authenticates user login by verifying email and password. Sets JWT in cookies.
  * @param {Object} req - Express request object containing login credentials (email, password).
  * @param {Object} res - Express response object.
- * @returns {Object} JSON response containing JWT token upon successful authentication.
+ * @returns {Object} JSON response containing JWT token.
  */
 export const loginUser = async (req, res) => {
   try {
@@ -54,13 +53,42 @@ export const loginUser = async (req, res) => {
       // Generate JWT token
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-      // Send token in response
-      res.json({ token });
+      // Set token as an HTTP-only cookie
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+        sameSite: "strict",
+        maxAge: 60 * 60 * 1000, // 1 hour
+      });
+
+      res.json({ message: "Login successful" });
     } else {
       res.status(401).json({ message: "Invalid credentials" });
     }
   } catch (error) {
     console.error("❌ Login Error:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * @function logoutUser
+ * @description Logs out a user by clearing the JWT cookie.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response confirming logout.
+ */
+export const logoutUser = (req, res) => {
+  try {
+    // Clear the JWT cookie
+    res.cookie("jwt", "", {
+      httpOnly: true,
+      expires: new Date(0), // Set expiration date to past to remove cookie
+    });
+
+    res.json({ message: "Successfully logged out" });
+  } catch (error) {
+    console.error("❌ Logout Error:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
