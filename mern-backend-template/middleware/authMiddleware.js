@@ -1,5 +1,5 @@
 /**
- * @fileoverview Authentication Middleware
+ * @fileoverview Authentication and Authorization Middleware
  * @module middleware/authMiddleware
  * @description Protects routes by verifying JWT tokens and authorizing users.
  */
@@ -21,7 +21,7 @@ dotenv.config();
  */
 export const protect = async (req, res, next) => {
   try {
-    // Extract token from Authorization header using optional chaining (?.)
+    // Extract token from Authorization header
     const token = req.headers.authorization?.startsWith("Bearer")
       ? req.headers.authorization.split(" ")[1]
       : null;
@@ -43,6 +43,23 @@ export const protect = async (req, res, next) => {
     res.status(401).json({ message: "Invalid token, authentication failed" });
   }
 };
+
+/**
+ * @function authorizeUser
+ * @description Middleware to check if the signed-in user is updating/deleting their own account.
+ * @param {Object} req - Express request object containing user ID in params.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next function to continue request processing.
+ * @returns {void} Calls `next()` if user is authorized, else returns an error response.
+ */
+export const authorizeUser = (req, res, next) => {
+  if (req.user && req.user._id.toString() === req.params.userId) {
+    next();
+  } else {
+    res.status(403).json({ message: "Unauthorized: You can only modify your own account" });
+  }
+};
+
 
 /**
  * @function adminOnly

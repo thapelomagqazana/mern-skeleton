@@ -11,7 +11,7 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/userController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { protect, authorizeUser } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -31,16 +31,16 @@ router.get("/:userId", protect, getUserById);
 
 /**
  * @route PUT /api/users/:userId
- * @description Updates user details (name, password).
- * @access Protected (Requires authentication)
+ * @description Updates user details (only the signed-in user can update their own info).
+ * @access Protected (Requires authentication & authorization)
  */
-router.put("/:userId", protect, updateUser);
+router.put("/:userId", protect, authorizeUser, updateUser);
 
 /**
  * @route DELETE /api/users/:userId
- * @description Deletes a user account.
- * @access Protected (Requires authentication)
+ * @description Deletes a user account (only the signed-in user can delete their own account).
+ * @access Protected (Requires authentication & authorization)
  */
-router.delete("/:userId", protect, deleteUser);
+router.delete("/:userId", protect, authorizeUser, deleteUser);
 
 export default router;
