@@ -4,10 +4,10 @@
  */
 
 import request from "supertest";
-import app from "../app.js";
+import app from "../../app.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import User from "../models/User.js"; // Import User model
+import User from "../../models/User.js"; // Import User model
 
 // Load environment variables
 dotenv.config();

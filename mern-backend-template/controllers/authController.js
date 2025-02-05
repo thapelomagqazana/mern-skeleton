@@ -108,22 +108,34 @@ export const loginUser = async (req, res) => {
 
 /**
  * @function logoutUser
- * @description Logs out a user by clearing the JWT cookie.
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- * @returns {Object} JSON response confirming logout.
+ * @description Logs out a user by clearing JWT and validating the request token.
+ * @route GET /auth/signout
+ * @access Protected
  */
-export const logoutUser = (req, res) => {
-  try {
-    // Clear the JWT cookie
-    res.cookie("jwt", "", {
-      httpOnly: true,
-      expires: new Date(0), // Set expiration date to past to remove cookie
-    });
-
-    res.json({ message: "Successfully logged out" });
-  } catch (error) {
-    console.error("❌ Logout Error:", error.message);
-    res.status(500).json({ message: "Server error" });
-  }
-};
+export const logoutUser = async (req, res) => {
+    try {
+      const token = req.headers.authorization?.startsWith("Bearer")
+        ? req.headers.authorization.split(" ")[1]
+        : null;
+  
+      if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+      }
+  
+      try {
+        // Verify token before proceeding
+        jwt.verify(token, process.env.JWT_SECRET);
+      } catch (error) {
+        return res.status(401).json({ message: "Invalid or expired token" });
+      }
+  
+      // Clear the cookie (for session-based authentication)
+      res.clearCookie("jwt");
+  
+      return res.status(200).json({ message: "User signed out successfully" });
+    } catch (error) {
+      console.error("Signout Error:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+  
