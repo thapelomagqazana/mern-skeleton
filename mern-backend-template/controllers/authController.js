@@ -15,24 +15,41 @@ import jwt from "jsonwebtoken";
  * @returns {Object} JSON response containing success message and user ID.
  */
 export const registerUser = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+    try {
+      const { name, email, password } = req.body;
+  
+      // Collect all missing fields instead of returning early
+      let errors = [];
+  
+      if (!name) errors.push("Name is required");
+      if (!email) errors.push("Email is required");
+      if (!password) errors.push("Password is required");
+  
+      if (errors.length > 0) {
+        return res.status(400).json({ message: errors.join(", ") });
+      }
+  
+      // Check if user already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: "User already exists" });
+      }
+  
+      // Create new user
+      const user = await User.create({ name, email, password });
+  
+      res.status(201).json({ message: "User registered successfully", userId: user._id });
+    } catch (error) {
+      console.error("❌ Registration Error:", error);
+  
+      if (error.name === "ValidationError") {
+        return res.status(400).json({ message: Object.values(error.errors).map(err => err.message).join(", ") });
+      }
+  
+      res.status(400).json({ message: "Invalid user data" });
     }
-
-    // Create new user
-    const user = await User.create({ name, email, password });
-
-    res.status(201).json({ message: "User registered successfully", userId: user._id });
-  } catch (error) {
-    console.error("❌ Registration Error:", error.message);
-    res.status(400).json({ message: "Invalid user data" });
-  }
 };
+  
 
 /**
  * @function loginUser

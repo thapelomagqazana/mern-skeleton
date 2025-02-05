@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Name is required"],
       trim: true,
+      maxlength: [255, "Name must be at most 255 characters long"],
     },
     email: {
       type: String,
@@ -28,6 +29,7 @@ const userSchema = new mongoose.Schema(
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         "Please enter a valid email address",
       ],
+      maxlength: [255, "Email must be at most 255 characters long"],
     },
     password: {
       type: String,
