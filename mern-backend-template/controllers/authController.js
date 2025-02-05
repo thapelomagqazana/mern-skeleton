@@ -59,33 +59,51 @@ export const registerUser = async (req, res) => {
  * @returns {Object} JSON response containing JWT token.
  */
 export const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Find user by email
-    const user = await User.findOne({ email });
-
-    // Check if user exists and password is correct
-    if (user && (await user.matchPassword(password))) {
+    try {
+      const { email, password } = req.body;
+  
+      let errors = [];
+      if (!email) errors.push("Email is required");
+      if (!password) errors.push("Password is required");
+  
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (email && !emailRegex.test(email.trim())) {
+        errors.push("Please enter a valid email address");
+      }
+  
+      // Reject emails longer than 255 characters
+      if (email && email.trim().length > 255) {
+        errors.push("Email must be at most 255 characters long");
+      }
+  
+      // Reject emails with emojis
+      if (email && /[\u{1F600}-\u{1F64F}]/u.test(email)) {
+        errors.push("Please enter a valid email address");
+      }
+  
+      // Reject emails with multiple consecutive dots
+      if (email && email.includes("..")) {
+        errors.push("Please enter a valid email address");
+      }
+  
+      if (errors.length > 0) {
+        return res.status(400).json({ message: errors.join(", ") });
+      }
+  
+      const user = await User.findOne({ email: email.trim() });
+      if (!user || !(await user.matchPassword(password))) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+  
       // Generate JWT token
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-      // Set token as an HTTP-only cookie
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-        sameSite: "strict",
-        maxAge: 60 * 60 * 1000, // 1 hour
-      });
-
-      res.json({ message: "Login successful" });
-    } else {
-      res.status(401).json({ message: "Invalid credentials" });
+  
+      res.status(200).json({ message: "Login successful", token });
+    } catch (error) {
+      console.error("❌ Login Error:", error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-  } catch (error) {
-    console.error("❌ Login Error:", error.message);
-    res.status(500).json({ message: "Server error" });
-  }
 };
 
 /**
