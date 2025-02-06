@@ -46,10 +46,17 @@ const userSchema = new mongoose.Schema(
           "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character.",
       },
     },
-  },
-  {
-    timestamps: true, // Automatically adds "createdAt" and "updatedAt" fields
-  }
+    role: {
+        type: String,
+        enum: ["admin", "user"],
+        default: "user",
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        },
+    },
+    { timestamps: true }
 );
 
 /**

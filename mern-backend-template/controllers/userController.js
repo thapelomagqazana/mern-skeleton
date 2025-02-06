@@ -15,9 +15,13 @@ import User from "../models/User.js";
  */
 export const getUsers = async (req, res) => {
   try {
+    let query = {};
+    if (req.query.role) {
+      query.role = req.query.role; // Apply role filter
+    }
     // Fetch all users, excluding passwords for security
-    const users = await User.find().select("-password");
-    res.json(users);
+    const users = await User.find(query).select("-password");
+    res.json({users: users});
   } catch (error) {
     console.error("❌ Error fetching users:", error.message);
     res.status(500).json({ message: "Server error" });

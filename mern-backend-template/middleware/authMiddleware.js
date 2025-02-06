@@ -76,3 +76,22 @@ export const adminOnly = (req, res, next) => {
     res.status(403).json({ message: "Access denied, admin only" });
   }
 };
+
+export const authorizeAdmin = (req, res, next) => {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied" });
+    }
+    next();
+};
+
+export const validateQueryParams = (req, res, next) => {
+    if (req.query.page && isNaN(req.query.page) || Number(req.query.page) < 1) {
+      return res.status(400).json({ message: "Invalid page number" });
+    }
+    if (req.query.search && /[<>;]/.test(req.query.search)) {
+      return res.status(400).json({ message: "Invalid input" });
+    }
+    next();
+};
+  
+  
