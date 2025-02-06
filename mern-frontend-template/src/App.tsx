@@ -10,9 +10,9 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
-// import Users from "./pages/Users";
-// import Profile from "./pages/Profile";
-// import EditProfile from "./pages/EditProfile";
+import UsersListPage from "./pages/UsersListPage";
+import ViewProfilePage from "./pages/ViewProfilePage";
+import EditProfilePage from "./pages/EditProfilePage";
 import Menu from "./components/Menu";
 
 const App: React.FC = () => {
@@ -26,9 +26,9 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/signin" element={<SignInPage />} />
-        {/* <Route path="/users" element={<Users />} /> */}
-        {/* <Route path="/profile/:id" element={<Profile />} /> */}
-        {/* <Route path="/profile/edit" element={<EditProfile />} /> */}
+        <Route path="/users" element={<UsersListPage />} />
+        <Route path="/profile/:userId" element={<ViewProfilePage />} />
+        <Route path="/profile/edit/:userId" element={<EditProfilePage />} />
       </Routes>
     </>
   );

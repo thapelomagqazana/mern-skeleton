@@ -12,7 +12,8 @@ import { AppBar, Toolbar, Button, Typography } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 
 const Menu: React.FC = () => {
-  const { user, logout } = useAuth(); // Get user state and logout function
+  const { logout } = useAuth(); // Get user state and logout function
+  const userId = localStorage.getItem("userId");
 
   return (
     <AppBar position="static" color="primary">
@@ -26,7 +27,7 @@ const Menu: React.FC = () => {
         </Button>
 
         {/* Show these buttons only if user is NOT logged in */}
-        {!user ? (
+        {!userId ? (
           <>
             <Button color="inherit" component={Link} to="/signup">
               Sign Up
@@ -38,10 +39,10 @@ const Menu: React.FC = () => {
         ) : (
           /* Show Profile & Logout if user is logged in */
           <>
-            <Button color="inherit" component={Link} to={`/profile/${user._id}`}>
+            <Button color="inherit" component={Link} to={"/users"}>
               Users
             </Button>
-            <Button color="inherit" component={Link} to={`/profile/${user._id}`}>
+            <Button color="inherit" component={Link} to={`/profile/${userId}`}>
               Profile
             </Button>
             <Button color="inherit" onClick={logout}>

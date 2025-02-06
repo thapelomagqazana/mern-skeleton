@@ -1,12 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { fetchCurrentUser } from "../services/userService";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // ✅ Ensure correct import
 import { useNavigate } from "react-router-dom";
 
 // Define AuthContext type
 interface AuthContextType {
-  user: any;
-  authUser: (data: any) => Promise<void>;
+  authUser: (data: any) => void;
   logout: () => void;
 }
 
@@ -30,10 +28,11 @@ interface DecodedToken {
 
 // AuthProvider Component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Function to check if the token is expired
+  /**
+   * Function to check if the token is expired
+   */
   const isTokenExpired = (token: string) => {
     try {
       const decoded: DecodedToken = jwtDecode(token);
@@ -43,6 +42,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  /**
+   * Load user from localStorage on mount
+   */
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
@@ -52,18 +54,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    fetchCurrentUser(userId)
-      .then(setUser)
-      .catch(() => logout());
+    // Decode the token immediately to restore user state
+    // try {
+    //   const decodedToken: DecodedToken = jwtDecode(token);
+    //   console.log(decodedToken);
+    //   setUser({ id: decodedToken.id }); // Set user from decoded token
+    // } catch (error) {
+    //   logout();
+    // }
   }, []);
 
   /**
    * Authenticates the user and stores credentials
    */
-  const authUser = async (data: any) => {
+  const authUser = (data: any) => {
     localStorage.setItem("token", data.token);
-    localStorage.setItem("userId", data.user._id); // Store userId
-    setUser(data.user);
+    localStorage.setItem("userId", data.user._id);
   };
 
   /**
@@ -71,13 +77,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    */
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("userId"); // Remove userId from storage
-    setUser(null);
-    navigate("/signin"); // Redirect to sign-in page
+    localStorage.removeItem("userId");
+    navigate("/signin");
   };
 
-  return <AuthContext.Provider value={{ user, authUser, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ authUser, logout }}>{children}</AuthContext.Provider>;
 };
 
-// ✅ Export AuthContext & useAuth properly
+// Export AuthContext & useAuth properly
 export { AuthContext };

@@ -8,7 +8,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchUsers } from "../services/";
+import { fetchUsers } from "../services/userService";
 import {
   Table,
   TableBody,
@@ -27,10 +27,13 @@ import {
  * Fetch users and display them in a table
  */
 const UsersListPage: React.FC = () => {
-  const { data: users, isLoading, isError } = useQuery({
+  const { data: usersObj, isLoading, isError } = useQuery({
     queryKey: ["users"],
     queryFn: fetchUsers,
   });
+
+  // Ensure usersObj exists before accessing .users
+  const usersList = usersObj?.users || [];
 
   return (
     <Container maxWidth="md">
@@ -49,7 +52,7 @@ const UsersListPage: React.FC = () => {
       {isError && <Alert severity="error">Failed to load users. Please try again.</Alert>}
 
       {/* Render users table if data is available */}
-      {users && (
+      {usersList.length > 0 ? (
         <TableContainer component={Paper} sx={{ marginTop: 4 }}>
           <Table>
             <TableHead>
@@ -57,19 +60,23 @@ const UsersListPage: React.FC = () => {
                 <TableCell><strong>ID</strong></TableCell>
                 <TableCell><strong>Name</strong></TableCell>
                 <TableCell><strong>Email</strong></TableCell>
+                <TableCell><strong>Role</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user: any) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.id}</TableCell>
+              {usersList.map((user: any) => (
+                <TableRow key={user._id}>
+                  <TableCell>{user._id}</TableCell>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+      ) : (
+        !isLoading && <Alert severity="info">No users found.</Alert>
       )}
     </Container>
   );

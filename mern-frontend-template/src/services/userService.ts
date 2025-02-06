@@ -28,8 +28,7 @@ export const loginUser = async (credentials: { email: string; password: string }
 // Fetch a user by userId
 export const fetchCurrentUser = async (userId: string) => {
     const response = await api.get(`/api/users/${userId}`);
-    console.log(response.data);
-    return response.data;
+    return response.data.user;
 };
   
 
@@ -41,7 +40,7 @@ export const fetchUsers = async () => {
 
 // Update user profile
 export const updateUser = async (userId: string, updates: Partial<User>) => {
-  const response = await api.put(`/users/${userId}`, updates);
+  const response = await api.put(`/api/users/${userId}`, updates);
   return response.data;
 };
 
