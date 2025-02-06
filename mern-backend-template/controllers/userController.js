@@ -125,8 +125,6 @@ export const updateUser = async (req, res) => {
   }
 };
 
-
-
 /**
  * @function deleteUser
  * @description Deletes a user from the database.
@@ -136,16 +134,37 @@ export const updateUser = async (req, res) => {
  */
 export const deleteUser = async (req, res) => {
   try {
-    // Find and delete user by ID
-    const user = await User.findByIdAndDelete(req.params.userId);
+    const { userId } = req.params;
+    const requesterId = req.user.id;
+    const requesterRole = req.user.role;
 
+    // Validate ObjectID format
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    // Prevent Non-Admin from deleting other users
+    if (requesterId !== userId && requesterRole !== "admin") {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    // Find user
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({ message: "User deleted successfully" });
+    // Delete user
+    await User.findByIdAndDelete(userId);
+
+    // Send appropriate messages
+    if (requesterId === userId) {
+      return res.status(200).json({ message: "Your account has been deleted" });
+    } else {
+      return res.status(200).json({ message: "User deleted successfully" });
+    }
   } catch (error) {
-    // console.error("❌ Error deleting user:", error.message);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ Error deleting user:", error.message);
+    return res.status(500).json({ message: "Server error" });
   }
 };
