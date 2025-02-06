@@ -5,6 +5,7 @@
  */
 
 import User from "../models/User.js";
+import mongoose from "mongoose";
 
 /**
  * @function getUsers
@@ -37,14 +38,32 @@ export const getUsers = async (req, res) => {
  */
 export const getUserById = async (req, res) => {
   try {
-    // Find user by ID, excluding password
-    const user = await User.findById(req.params.userId).select("-password");
-    
+    const { userId } = req.params;
+    const requesterId = req.user.id;
+    const isAdmin = req.user.role === "admin";
+
+    // Ensure user can only fetch their profile or admin can fetch any user
+    if (!isAdmin && userId !== requesterId) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    // XSS Attack Prevention
+    const xssRegex = /<script>|<\/script>/i;
+    if (xssRegex.test(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    // Validate ObjectID format
+    if (!mongoose.Types.ObjectId.isValid(userId) || !isNaN(userId) || userId.length > 24) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const user = await User.findById(userId).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user);
+    res.json({ user });
   } catch (error) {
     console.error("❌ Error fetching user:", error.message);
     res.status(500).json({ message: "Server error" });
