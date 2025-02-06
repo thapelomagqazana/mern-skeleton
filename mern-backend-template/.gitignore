@@ -33,8 +33,6 @@ Thumbs.db
 
 # Babel and Webpack
 .cache/
-.babelrc.js
-webpack.server.js
 
 # Miscellaneous
 *.bak
