@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // ✅ Ensure correct import
+import React, { createContext, useContext, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import { logoutUser } from "../services/userService";
 import { useNavigate } from "react-router-dom";
 
 // Define AuthContext type
@@ -76,6 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    * Logs out the user
    */
   const logout = () => {
+    logoutUser();
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     navigate("/signin");

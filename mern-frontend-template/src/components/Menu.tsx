@@ -22,7 +22,8 @@ const Menu: React.FC = () => {
           MERN Skeleton
         </Typography>
 
-        <Button color="inherit" component={Link} to="/">
+        {/* Dynamic Home Button */}
+        <Button color="inherit" component={Link} to={userId ? "/dashboard" : "/"}>
           Home
         </Button>
 

@@ -24,6 +24,20 @@ export const loginUser = async (credentials: { email: string; password: string }
   return response.data;
 };
 
+// Log out user
+export const logoutUser = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return; // Prevent unnecessary API calls
+  
+    const response = await api.get("/auth/signout",{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+    return response.data;
+};
+
 // Fetch the current logged-in user
 // Fetch a user by userId
 export const fetchCurrentUser = async (userId: string) => {
@@ -46,6 +60,6 @@ export const updateUser = async (userId: string, updates: Partial<User>) => {
 
 // Delete a user
 export const deleteUser = async (userId: string) => {
-  const response = await api.delete(`/users/${userId}`);
+  const response = await api.delete(`/api/users/${userId}`);
   return response.data;
 };

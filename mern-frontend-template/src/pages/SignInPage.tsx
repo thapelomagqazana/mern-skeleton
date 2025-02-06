@@ -62,7 +62,7 @@ const SignInPage: React.FC = () => {
       reset();
       setTimeout(() => navigate("/dashboard"), 2000);
     } catch (error: any) {
-      setSnackbar({ open: true, message: error.message || "Login failed", severity: "error" });
+      setSnackbar({ open: true, message: error.response?.data?.message || "Login failed", severity: "error" });
     } finally {
       setLoading(false);
     }

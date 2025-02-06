@@ -13,6 +13,7 @@ import SignInPage from "./pages/SignInPage";
 import UsersListPage from "./pages/UsersListPage";
 import ViewProfilePage from "./pages/ViewProfilePage";
 import EditProfilePage from "./pages/EditProfilePage";
+import DashboardPage from "./pages/DashboardPage";
 import Menu from "./components/Menu";
 
 const App: React.FC = () => {
@@ -29,6 +30,7 @@ const App: React.FC = () => {
         <Route path="/users" element={<UsersListPage />} />
         <Route path="/profile/:userId" element={<ViewProfilePage />} />
         <Route path="/profile/edit/:userId" element={<EditProfilePage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </>
   );
