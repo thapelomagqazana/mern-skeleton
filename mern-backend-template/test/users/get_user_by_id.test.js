@@ -74,8 +74,7 @@ describe("GET /api/users/:userId - Retrieve User", () => {
     const response = await request(app)
       .get(`/api/users/${validUserId}`)
       .set("Authorization", `Bearer ${adminToken}`);
-    
-    console.log(response.body);
+      
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("user");
   });

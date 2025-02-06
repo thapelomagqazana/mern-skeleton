@@ -24,7 +24,7 @@ export const getUsers = async (req, res) => {
     const users = await User.find(query).select("-password");
     res.json({users: users});
   } catch (error) {
-    console.error("❌ Error fetching users:", error.message);
+    // console.error("❌ Error fetching users:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -65,7 +65,7 @@ export const getUserById = async (req, res) => {
 
     res.json({ user });
   } catch (error) {
-    console.error("❌ Error fetching user:", error.message);
+    // console.error("❌ Error fetching user:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -79,29 +79,53 @@ export const getUserById = async (req, res) => {
  */
 export const updateUser = async (req, res) => {
   try {
-    // Find user by ID
-    const user = await User.findById(req.params.userId);
+    const { userId } = req.params;
+    const updateData = req.body;
+    const requestingUser = req.user; // Extract user from auth middleware
 
-    if (!user) {
+    // Validate user ID format before querying MongoDB
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    // Prevent non-admin users from updating others
+    if (requestingUser.role !== "admin" && requestingUser.id !== userId) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    // Prevent restricted fields from being updated
+    if (updateData.password) {
+      return res.status(400).json({ message: "Password update not allowed" });
+    }
+
+    // Prevent `_id` modification
+    delete updateData._id;
+
+    // Find and update the user
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update name if provided
-    user.name = req.body.name || user.name;
-
-    // Update password if provided
-    if (req.body.password) {
-      user.password = req.body.password;
+    res.json({ message: "User updated successfully", user: updatedUser });
+  } catch (error) {
+    // console.error("❌ Error updating user:", error.message);
+    
+    // Catch Mongoose validation errors
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: error.message });
     }
 
-    // Save updated user details
-    const updatedUser = await user.save();
-    res.json(updatedUser);
-  } catch (error) {
-    console.error("❌ Error updating user:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 /**
  * @function deleteUser
@@ -121,7 +145,7 @@ export const deleteUser = async (req, res) => {
 
     res.json({ message: "User deleted successfully" });
   } catch (error) {
-    console.error("❌ Error deleting user:", error.message);
+    // console.error("❌ Error deleting user:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };

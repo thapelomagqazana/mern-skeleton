@@ -39,49 +39,9 @@ export const protect = async (req, res, next) => {
 
     next(); // Continue to the next middleware/controller
   } catch (error) {
-    console.error("❌ Authentication Error:", error.message);
+    // console.error("❌ Authentication Error:", error.message);
     res.status(401).json({ message: "Invalid token, authentication failed" });
   }
-};
-
-/**
- * @function authorizeUser
- * @description Middleware to check if the signed-in user is updating/deleting their own account.
- * @param {Object} req - Express request object containing user ID in params.
- * @param {Object} res - Express response object.
- * @param {Function} next - Express next function to continue request processing.
- * @returns {void} Calls `next()` if user is authorized, else returns an error response.
- */
-export const authorizeUser = (req, res, next) => {
-  if (req.user && req.user._id.toString() === req.params.userId) {
-    next();
-  } else {
-    res.status(403).json({ message: "Unauthorized: You can only modify your own account" });
-  }
-};
-
-
-/**
- * @function adminOnly
- * @description Middleware to restrict access to admin users only.
- * @param {Object} req - Express request object containing user details.
- * @param {Object} res - Express response object.
- * @param {Function} next - Express next function to continue request processing.
- * @returns {void} Calls `next()` if user is an admin, else returns an error response.
- */
-export const adminOnly = (req, res, next) => {
-  if (req.user?.isAdmin) {
-    next();
-  } else {
-    res.status(403).json({ message: "Access denied, admin only" });
-  }
-};
-
-export const authorizeAdmin = (req, res, next) => {
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Access denied" });
-    }
-    next();
 };
 
 export const validateQueryParams = (req, res, next) => {

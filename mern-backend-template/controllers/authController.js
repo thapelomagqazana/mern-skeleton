@@ -16,7 +16,7 @@ import jwt from "jsonwebtoken";
  */
 export const registerUser = async (req, res) => {
     try {
-      const { name, email, password } = req.body;
+      let { name, email, password, role } = req.body;
   
       // Collect all missing fields instead of returning early
       let errors = [];
@@ -28,6 +28,16 @@ export const registerUser = async (req, res) => {
       if (errors.length > 0) {
         return res.status(400).json({ message: errors.join(", ") });
       }
+
+      // Set default role if not provided
+      role = role ?? "user";
+
+      // Ensure only valid roles are assigned
+      const validRoles = ["user", "admin"];
+      if (!validRoles.includes(role)) {
+        return res.status(400).json({ message: "Invalid role specified" });
+      }
+
   
       // Check if user already exists
       const existingUser = await User.findOne({ email });
@@ -36,11 +46,11 @@ export const registerUser = async (req, res) => {
       }
   
       // Create new user
-      const user = await User.create({ name, email, password });
+      const user = await User.create({ name, email, password, role });
   
       res.status(201).json({ message: "User registered successfully", userId: user._id });
     } catch (error) {
-      console.error("❌ Registration Error:", error);
+      // console.error("❌ Registration Error:", error);
   
       if (error.name === "ValidationError") {
         return res.status(400).json({ message: Object.values(error.errors).map(err => err.message).join(", ") });
@@ -101,7 +111,7 @@ export const loginUser = async (req, res) => {
   
       res.status(200).json({ message: "Login successful", token });
     } catch (error) {
-      console.error("❌ Login Error:", error);
+      // console.error("❌ Login Error:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
 };

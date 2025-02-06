@@ -158,12 +158,12 @@ describe("POST /auth/signup - User Registration", () => {
   /**
    * 🔹 Edge Cases
    */
-  it("🔹 Should ignore extra fields in request", async () => {
+  it("🔹 Should accept role field in request", async () => {
     const response = await request(app).post("/auth/signup").send({
       name: "John Doe",
       email: "extra@example.com",
       password: "Password@123",
-      role: "admin", // Extra field
+      role: "admin",
     });
 
     expect(response.status).toBe(201);
@@ -173,7 +173,7 @@ describe("POST /auth/signup - User Registration", () => {
     // Ensure only expected fields are stored
     const user = await User.findOne({ email: "extra@example.com" });
     expect(user).not.toBeNull();
-    expect(user.role).toBeUndefined();
+    expect(user.role).toBe("admin");
   });
 
   it("🔹 Should trim leading and trailing spaces in email", async () => {
