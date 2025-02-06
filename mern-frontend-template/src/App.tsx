@@ -8,8 +8,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-// import SignUp from "./pages/SignUp";
-// import SignIn from "./pages/SignIn";
+import SignUpPage from "./pages/SignUpPage";
+import SignInPage from "./pages/SignInPage";
 // import Users from "./pages/Users";
 // import Profile from "./pages/Profile";
 // import EditProfile from "./pages/EditProfile";
@@ -24,8 +24,8 @@ const App: React.FC = () => {
       {/* Define application routes */}
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/signup" element={<SignUp />} /> */}
-        {/* <Route path="/signin" element={<SignIn />} /> */}
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/signin" element={<SignInPage />} />
         {/* <Route path="/users" element={<Users />} /> */}
         {/* <Route path="/profile/:id" element={<Profile />} /> */}
         {/* <Route path="/profile/edit" element={<EditProfile />} /> */}

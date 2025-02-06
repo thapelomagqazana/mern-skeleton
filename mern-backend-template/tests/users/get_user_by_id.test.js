@@ -218,5 +218,6 @@ describe("GET /api/users/:userId - Retrieve User", () => {
  * @afterAll - Close database connection after tests
  */
 afterAll(async () => {
+  await User.deleteMany({});
   await mongoose.connection.close();
 });

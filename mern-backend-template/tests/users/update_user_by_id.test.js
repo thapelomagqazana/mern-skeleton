@@ -63,6 +63,7 @@ beforeAll(async () => {
  * @afterAll - Disconnect from the test database after tests
  */
 afterAll(async () => {
+  await User.deleteMany({});
   await mongoose.disconnect();
 });
 

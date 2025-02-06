@@ -231,5 +231,6 @@ afterEach(async () => {
  * @description Ensures tests do not hang due to open DB connections
  */
 afterAll(async () => {
+  await User.deleteMany({});
   await mongoose.connection.close();
 });

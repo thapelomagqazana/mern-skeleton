@@ -5,14 +5,13 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "jsx": "react-jsx",
-    "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
-  },
-  "include": ["src"]
+      "moduleResolution": "node", // Ensure 'node' is set instead of 'classic'
+      "resolveJsonModule": true,  // Allows importing JSON files
+      "esModuleInterop": true,    // Ensures compatibility with ES modules
+      "strict": true,
+      "jsx": "react-jsx",
+      "target": "ESNext",
+      "module": "ESNext"
+    },
+    "include": ["src", "cypress"]
 }

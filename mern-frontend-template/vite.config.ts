@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
     ],
     server: {
       host: true, // Allows access from network
-      port: 5173, // Default Vite port
+      port: parseInt(env.VITE_PORT) || 5173, // Default Vite port
       strictPort: true, // Ensures the selected port is used
       open: true, // Automatically opens in the browser
       hmr: {
