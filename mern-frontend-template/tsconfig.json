@@ -5,13 +5,18 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-      "moduleResolution": "node", // Ensure 'node' is set instead of 'classic'
-      "resolveJsonModule": true,  // Allows importing JSON files
-      "esModuleInterop": true,    // Ensures compatibility with ES modules
-      "strict": true,
-      "jsx": "react-jsx",
-      "target": "ESNext",
-      "module": "ESNext"
-    },
-    "include": ["src", "cypress"]
+    "outDir": "./dist",                // Make sure compiled files go into 'dist'
+    "composite": true,                  // Required for `tsc -b`
+    "declaration": true,                 // Generates declaration files (.d.ts)
+    "declarationMap": true,
+    "noEmitOnError": false,              // Ensures .d.ts files are still generated
+    "skipLibCheck": true,                // Ignore checking node_modules
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "target": "ESNext",
+    "module": "ESNext",
+    "strict": true
+  },
+  "include": ["src"],
+  "exclude": ["dist", "node_modules", "cypress"]
 }
