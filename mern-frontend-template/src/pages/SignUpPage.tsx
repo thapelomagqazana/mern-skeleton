@@ -11,7 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
-import { registerUser } from "../services/userService"; // Importing API function
+import { registerUser } from "../services/userService";
 import {
   TextField,
   Button,
@@ -70,16 +70,22 @@ const SignUpPage: React.FC = () => {
     try {
       const response = await registerUser(data); // Using the abstracted API function
       setSnackbar({ open: true, message: response.message, severity: "success" });
-
+  
       // Reset form and redirect after success
       reset();
       setTimeout(() => navigate("/signin"), 2000);
-    } catch (error: any) {
-      setSnackbar({ open: true, message: error.response?.data?.message || "Signup failed", severity: "error" });
+    } catch (error: unknown) {  // Use 'unknown' instead of 'any'
+      if (error instanceof Error && "response" in error) {
+        const axiosError = error as { response?: { data?: { message?: string } } };  // Proper type assertion
+        setSnackbar({ open: true, message: axiosError.response?.data?.message || "Signup failed", severity: "error" });
+      } else {
+        setSnackbar({ open: true, message: "An unexpected error occurred", severity: "error" });
+      }
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <Container maxWidth="sm">

@@ -61,8 +61,13 @@ const SignInPage: React.FC = () => {
       // Reset form and redirect after success
       reset();
       setTimeout(() => navigate("/dashboard"), 2000);
-    } catch (error: any) {
-      setSnackbar({ open: true, message: error.response?.data?.message || "Login failed", severity: "error" });
+    } catch (error: unknown) {  // Use 'unknown' instead of 'any'
+      if (error instanceof Error && "response" in error) {
+        const axiosError = error as { response?: { data?: { message?: string } } };  // Proper type assertion
+        setSnackbar({ open: true, message: axiosError.response?.data?.message || "Signup failed", severity: "error" });
+      } else {
+        setSnackbar({ open: true, message: "An unexpected error occurred", severity: "error" });
+      }
     } finally {
       setLoading(false);
     }

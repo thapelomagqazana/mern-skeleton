@@ -43,8 +43,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+
   /**
-   * Load user from localStorage on mount
+   * Retrieve credentials on app load
    */
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -54,19 +55,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       logout(); // Expired or missing token → log out
       return;
     }
-
-    // Decode the token immediately to restore user state
-    // try {
-    //   const decodedToken: DecodedToken = jwtDecode(token);
-    //   console.log(decodedToken);
-    //   setUser({ id: decodedToken.id }); // Set user from decoded token
-    // } catch (error) {
-    //   logout();
-    // }
   }, []);
 
+
   /**
-   * Authenticates the user and stores credentials
+   * Save credentials on successful login
    */
   const authUser = (data: any) => {
     localStorage.setItem("token", data.token);
@@ -74,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   /**
-   * Logs out the user
+   * Delete credentials on logout
    */
   const logout = () => {
     logoutUser();

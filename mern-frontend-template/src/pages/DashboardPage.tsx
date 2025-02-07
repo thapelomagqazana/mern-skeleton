@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { fetchCurrentUser } from "../services/userService";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";

@@ -9,7 +9,6 @@
 import React, { useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { fetchCurrentUser, updateUser } from "../services/userService";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -46,7 +45,6 @@ interface ProfileFormInputs {
 const EditProfilePage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>(); // Get userId from the URL
   const navigate = useNavigate();
-  const { authUser } = useAuth(); // Get authUser function to update local storage
 
   // Fetch current user data
   const { data: userDetails, isLoading, isError } = useQuery({
