@@ -44,12 +44,12 @@ cd mern-skeleton
 ### **2️⃣ Install Dependencies**
 #### **Frontend**
 ```bash
-cd mern-frontend-template
+cd frontend
 npm install
 ```
 #### **Backend**
 ```bash
-cd ../mern-backend-template
+cd backend
 npm install
 ```
 
@@ -58,19 +58,19 @@ npm install
 Create a `.env` file in both **frontend** and **backend** folders.  
 
 
-#### **Frontend (`mern-frontend-template/.env`)**
+#### **Frontend (`frontend/.env`)**
 ```ini
 VITE_API_URL=http://localhost:5000/
 VITE_PORT=8080
 ```
 
 
-#### **Backend (`mern-backend-template/.env`)**
+#### **Backend (`backend/.env`)**
 ```ini
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/mern_skeleton
 JWT_SECRET=your_secret_key
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=http://localhost:8080
 ```
 
 
@@ -93,7 +93,7 @@ npm run dev
 cd mern-frontend-template
 npm run dev
 ```
-- Runs the client on **http://localhost:5173**  
+- Runs the client on **http://localhost:8080**  
 
 
 ---
