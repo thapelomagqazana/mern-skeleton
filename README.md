@@ -124,7 +124,7 @@ npx cypress open
 ## **📂 Project Structure**
 ```
 mern-skeleton
-│── mern-frontend-template/         # React frontend
+│── frontend/         # React frontend
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
@@ -134,7 +134,7 @@ mern-skeleton
 │   │   ├── main.tsx
 │   │── .env
 │   │── package.json
-│── mern-backend-template/          # Node.js backend
+│── backend/          # Node.js backend
 │   ├── models/
 │   ├── routes/
 │   ├── controllers/
