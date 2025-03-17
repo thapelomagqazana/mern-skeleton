@@ -4,7 +4,7 @@ version: "3.9"
 services:
   frontend:
     build:
-      context: ./mern-frontend-template
+      context: ./frontend
       dockerfile: Dockerfile
     environment:
       - VITE_API_URL=http://localhost:5000
@@ -17,7 +17,7 @@ services:
 
   backend:
     build:
-      context: ./mern-backend-template
+      context: ./backend
       dockerfile: Dockerfile
     environment:
       - MONGO_URI=mongodb://mongo:27017/mern-db
