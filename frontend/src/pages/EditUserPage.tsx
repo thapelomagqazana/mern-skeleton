@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import { getUserById, updateUser } from "../utils/userService";
 import UserForm from "../components/edit_profile/UserForm";
+import type { UserFormValues } from "../components/edit_profile/UserForm";
+
 import Loader from "../components/Loader";
 import SnackbarAlert from "../components/SnackbarAlert";
 
@@ -10,11 +12,12 @@ const EditUserPage: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
 
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<UserFormValues>({
     name: "",
     email: "",
     role: "user",
   });
+  
   const [loading, setLoading] = useState<boolean>(true);
   const [snackbar, setSnackbar] = useState<{
     message: string;
@@ -34,10 +37,14 @@ const EditUserPage: React.FC = () => {
     const fetchUser = async () => {
       try {
         const response = await getUserById(userId);
+    
+        // Safely narrow role value
+        const role = response.role === "admin" ? "admin" : "user";
+    
         setUserData({
           name: response.name,
           email: response.email,
-          role: response.role || "user",
+          role,
         });
       } catch (err) {
         const error = err as AxiosError<{ message: string }>;

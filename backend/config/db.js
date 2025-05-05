@@ -4,7 +4,7 @@
  * @description Establishes a connection with MongoDB using Mongoose.
  */
 
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 /**
  * @function connectDB
@@ -31,4 +31,4 @@ const connectDB = async () => {
 };
 
 // Export the function to be used in `server.js`
-export default connectDB;
+module.exports = connectDB;

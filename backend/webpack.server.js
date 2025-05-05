@@ -3,11 +3,16 @@
  * @description Bundles and optimizes the backend for production.
  */
 
-import path from "path";
-import webpack from "webpack";
-import nodeExternals from "webpack-node-externals";
+const path = require("path");
+const webpack = require("webpack");
+const nodeExternals = require("webpack-node-externals");
+const dotenv = require("dotenv");
 
-export default {
+// Load environment variables
+dotenv.config();
+
+/** @type {import('webpack').Configuration} */
+module.exports = {
   entry: "./server.js",
   target: "node",
   externals: [nodeExternals()],
@@ -15,7 +20,7 @@ export default {
     path: path.resolve("dist"),
     filename: "server.bundle.js",
   },
-  mode: "development",
+  mode: process.env.NODE_ENV || "development",
   module: {
     rules: [
       {
@@ -27,7 +32,5 @@ export default {
       },
     ],
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-  ],
+  plugins: [new webpack.HotModuleReplacementPlugin()],
 };

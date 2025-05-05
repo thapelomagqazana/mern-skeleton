@@ -15,7 +15,7 @@ interface JwtPayload {
   role: string;
   exp: number; // Expiration time in seconds
   iat: number;
-  user_id: number;
+  id: number;
 }
 
 interface AuthContextType {
@@ -53,7 +53,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           await signOut();
           return;
         }
-        const userId = decoded.user_id.toString();
+
+        const userId = decoded.id.toString();
         const profile = await getUserById(userId);
         setUser(profile);
         setIsAuth(true);

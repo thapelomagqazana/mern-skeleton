@@ -25,8 +25,8 @@ export const signIn = async (email: string, password: string) => {
     password,
   });
 
-  const { access_token } = response.data;
-  storeToken(access_token);
+  const { token } = response.data;
+  storeToken(token);
 
   return response.data;
 };
@@ -37,9 +37,8 @@ export const signOut = async () => {
 
   if (!token) return;
 
-  await axios.post(
+  await axios.get(
     `${API_URL}/signout`,
-    {},
     {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -2,7 +2,7 @@ import axios from "axios";
 import { getToken } from "./authService";
 
 export interface UserProfile {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   role: string;
@@ -10,10 +10,11 @@ export interface UserProfile {
 
 // Backend API base URL (from your .env)
 const API_URL = `${import.meta.env.VITE_API_URL}/api/users`;
+const API_URL_AUTH = `${import.meta.env.VITE_API_URL}/auth`;
 
 // Sign up new user
 export const signUp = async (name: string, email: string, password: string) => {
-  const response = await axios.post(`${API_URL}/`, {
+  const response = await axios.post(`${API_URL_AUTH}/signup`, {
     name,
     email,
     password,
@@ -24,7 +25,7 @@ export const signUp = async (name: string, email: string, password: string) => {
 
 // Get user by ID
 export const getUserById = async (userId: string): Promise<UserProfile> => {
-  const response = await axios.get<UserProfile>(
+  const response = await axios.get<{ user: UserProfile }>(
     `${API_URL}/${userId}`,
     {
       headers: {
@@ -32,7 +33,7 @@ export const getUserById = async (userId: string): Promise<UserProfile> => {
       },
     }
   );
-  return response.data;
+  return response.data.user;
 };
 
 export const updateUser = async (userId: string, userData: { name: string; email: string; role: string }) => {

@@ -4,8 +4,12 @@
  * @description Defines API endpoints for user authentication (sign-up, sign-in, and sign-out).
  */
 
-import express from "express";
-import { registerUser, loginUser, logoutUser } from "../controllers/authController.js";
+const express = require("express");
+const {
+  registerUser,
+  loginUser,
+  logoutUser,
+} = require("../controllers/authController");
 
 const router = express.Router();
 
@@ -30,4 +34,4 @@ router.post("/signin", loginUser);
  */
 router.get("/signout", logoutUser);
 
-export default router;
+module.exports = router;

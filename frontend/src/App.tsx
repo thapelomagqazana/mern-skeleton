@@ -1,8 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import Home from './pages/Home';
-// import SignIn from './pages/SignIn';
-// import SignUp from './pages/SignUp';
-// import Profile from './pages/Profile';
+
 // import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -28,8 +25,6 @@ export default function App() {
               <Route path="/profile/:userId" element={<ViewProfilePage />} />
               <Route path="/profile/edit/:userId" element={<EditUserPage />} />
             </Route>
-            {/* <Route path="/signup" element={<SignUp />} /> */}
-            {/* <Route path="/profile" element={<Profile />} /> */}
             {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </main>

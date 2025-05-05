@@ -12,10 +12,10 @@ const schema = yup.object().shape({
 });
 
 // Define form values
-interface UserFormValues {
+export interface UserFormValues {
   name: string;
   email: string;
-  role: string;
+  role: "user" | "admin";
 }
 
 // Define props for the component

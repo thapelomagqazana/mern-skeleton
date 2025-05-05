@@ -22,9 +22,9 @@ const ViewProfilePage = () => {
         const user = await getUserById(userId);
         setProfile(user);
       } catch (err) {
-        const error = err as AxiosError<{ detail: string }>;
+        const error = err as AxiosError<{ message: string }>;
         setSnackbar({
-          message: error.response?.data?.detail || "Failed to load user.",
+          message: error.response?.data?.message || "Failed to load user.",
           severity: "error",
         });
       }

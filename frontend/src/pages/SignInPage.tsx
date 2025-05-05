@@ -40,9 +40,9 @@ const SignInPage = () => {
       setSnackbar({ message: "Signed in successfully!", severity: "success" });
       reset();
     } catch (err) {
-      const error = err as AxiosError<{ detail: string }>;
+      const error = err as AxiosError<{ message: string }>;
       setSnackbar({
-        message: error.response?.data?.detail || "Sign-in failed.",
+        message: error.response?.data?.message || "Sign-in failed.",
         severity: "error",
       });
     } finally {
@@ -53,7 +53,7 @@ const SignInPage = () => {
   // Redirect after sign-in when user data is loaded
   useEffect(() => {
     if (user) {
-      setTimeout(() => navigate(`/profile/${user.id}`), 1500);
+      setTimeout(() => navigate(`/profile/${user._id}`), 1500);
     }
   }, [user, navigate]);
 

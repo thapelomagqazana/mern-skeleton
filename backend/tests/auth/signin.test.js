@@ -3,15 +3,16 @@
  * @description Ensures login functionality works correctly, including validation and security cases.
  */
 
-import request from "supertest";
-import app from "../../app.js";
-import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import User from "../../models/User.js"; // Import User model
+const request = require("supertest");
+const app = require("../../app");
+const { MongoMemoryServer } = require("mongodb-memory-server");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const User = require("../../models/User");
 
 // Load environment variables
 dotenv.config();
+
 
 let mongoServer;
 

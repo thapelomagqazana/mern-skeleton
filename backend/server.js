@@ -3,9 +3,9 @@
  * @description Starts the Express server after connecting to MongoDB.
  */
 
-import dotenv from "dotenv";
-import app from "./app.js";
-import connectDB from "./config/db.js";
+const dotenv = require("dotenv");
+const app = require("./app");
+const connectDB = require("./config/db");
 
 // Load environment variables
 dotenv.config();

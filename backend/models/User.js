@@ -4,8 +4,8 @@
  * @description Defines the user schema, handles password encryption, and provides authentication methods.
  */
 
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 /**
  * @constant userSchema
@@ -37,26 +37,23 @@ const userSchema = new mongoose.Schema(
       minlength: [8, "Password must be at least 8 characters long"],
       validate: {
         validator: function (value) {
-          // Regex for a strong password: at least one uppercase, one lowercase, one digit, and one special character
-          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
-            value
-          );
+          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value);
         },
         message:
           "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character.",
       },
     },
     role: {
-        type: String,
-        enum: ["admin", "user"],
-        default: "user",
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
     },
     createdAt: {
-        type: Date,
-        default: Date.now,
-        },
+      type: Date,
+      default: Date.now,
     },
-    { timestamps: true }
+  },
+  { timestamps: true }
 );
 
 /**
@@ -65,11 +62,11 @@ const userSchema = new mongoose.Schema(
  * @param {Function} next - Express next function to continue request processing.
  */
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next(); // Skip hashing if password is not modified
+  if (!this.isModified("password")) return next();
 
   try {
-    const salt = await bcrypt.genSalt(10); // Generate salt
-    this.password = await bcrypt.hash(this.password, salt); // Hash password
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (error) {
     next(error);
@@ -87,4 +84,4 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 // Export the User model
-export default mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);

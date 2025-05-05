@@ -4,14 +4,17 @@
  * @description Defines API endpoints for user CRUD operations.
  */
 
-import express from "express";
-import {
+const express = require("express");
+const {
   getUsers,
   getUserById,
   updateUser,
   deleteUser,
-} from "../controllers/userController.js";
-import { protect, validateQueryParams } from "../middleware/authMiddleware.js";
+} = require("../controllers/userController");
+const {
+  protect,
+  validateQueryParams,
+} = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -43,4 +46,4 @@ router.put("/:userId", protect, updateUser);
  */
 router.delete("/:userId", protect, deleteUser);
 
-export default router;
+module.exports = router;

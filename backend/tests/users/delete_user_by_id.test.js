@@ -1,10 +1,10 @@
-import request from "supertest";
-import app from "../../app.js";
-import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import User from "../../models/User.js";
-import jwt from "jsonwebtoken";
+const request = require("supertest");
+const app = require("../../app");
+const { MongoMemoryServer } = require("mongodb-memory-server");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const User = require("../../models/User");
+const jwt = require("jsonwebtoken");
 
 // Load environment variables
 dotenv.config();

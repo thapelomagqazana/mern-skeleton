@@ -71,6 +71,7 @@ PORT=5000
 MONGO_URI=mongodb://localhost:27017/mern_skeleton
 JWT_SECRET=your_secret_key
 FRONTEND_URL=http://localhost:8080
+NODE_ENV=development
 ```
 
 
@@ -103,7 +104,13 @@ npm run dev
 ```bash
 docker-compose up --build
 ```
-- Runs both frontend and backend inside containers  
+- Runs both frontend and backend inside containers
+
+### **Remove Docker Container**
+```bash
+docker-compose down -v --remove-orphans
+```
+- Remove both frontend and backend containers  
 
 
 ---

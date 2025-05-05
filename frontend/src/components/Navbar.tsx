@@ -5,9 +5,9 @@ import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isAuth, signOut } = useAuth();
+  const { isAuth, signOut, user } = useAuth();
   const navigate = useNavigate();
-
+  console.log(user);
   const handleLogout = async () => {
     await signOut();
     navigate("/signin");
@@ -54,12 +54,15 @@ const Navbar = () => {
               >
                 <FaUserFriends /> Users
               </Link>
-              <Link
-                to="/profile"
-                className="flex items-center gap-2 hover:text-gray-300"
-              >
-                <FaUser /> Profile
-              </Link>
+              {user && (
+                <Link
+                  to={`/profile/${user._id}`}
+                  className="flex items-center gap-2 hover:text-gray-300"
+                >
+                  <FaUser /> Profile
+                </Link>
+              )}
+              
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 hover:text-gray-300"
@@ -122,13 +125,15 @@ const Navbar = () => {
               >
                 <FaUserFriends className="inline mr-2" /> Users
               </Link>
-              <Link
-                to="/profile"
-                className="block px-4 py-2 hover:bg-blue-800"
-                onClick={() => setMenuOpen(false)}
-              >
-                <FaUser className="inline mr-2" /> Profile
-              </Link>
+              {user && (
+                <Link
+                  to={`/profile/${user._id}`}
+                  className="block px-4 py-2 hover:bg-blue-800"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <FaUser className="inline mr-2" /> Profile
+                </Link>
+              )}
               <button
                 onClick={() => {
                   handleLogout();

@@ -47,9 +47,9 @@ const SignUpPage = () => {
       reset();
       setTimeout(() => navigate("/signin"), 1500);
     } catch (err) {
-      const error = err as AxiosError<{ detail: string }>;
+      const error = err as AxiosError<{ message: string }>;
       setSnackbar({
-        message: error.response?.data?.detail || "Registration failed.",
+        message: error.response?.data?.message || "Registration failed.",
         severity: "error",
       });
     } finally {
