@@ -83,7 +83,7 @@ NODE_ENV=development
 
 ### **⚡ Start the Backend**
 ```bash
-cd mern-backend-template
+cd backend
 npm run dev
 ```
 - Runs the server on **http://localhost:5000**  
@@ -91,7 +91,7 @@ npm run dev
 
 ### **⚡ Start the Frontend**
 ```bash
-cd mern-frontend-template
+cd frontend
 npm run dev
 ```
 - Runs the client on **http://localhost:8080**  
@@ -119,7 +119,7 @@ docker-compose down -v --remove-orphans
 ## **🧪 Running Tests**
 ### **Cypress E2E Tests**
 ```bash
-cd mern-frontend-template
+cd frontend
 npx cypress open
 ```
 - Opens the Cypress test runner  
